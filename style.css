@@ -215,7 +215,10 @@ input[type="radio"]:checked::before {
 
 .div_dropdown {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
+  padding: 1%;
+  padding-left: 2%;
+  padding-right: 2%;
 } 
 
 .div_dropdown_hidden {
@@ -225,9 +228,12 @@ input[type="radio"]:checked::before {
   border: 2px solid var(--border-panel);
   outline: 2px solid var(--bg-panel);
   min-width: 300px;
-  justify-content: space-around;
+  justify-content: space-between;
   padding: 1%;
+  padding-left: 2%;
+  padding-right: 2%;
   align-self: baseline;
+  margin: 1.5%;
 }
 
 .div_dropdown_hidden button {
@@ -259,9 +265,17 @@ input[type="radio"]:checked::before {
     margin: 0.5%;
   }
 
+  #completed_section {
+    margin: 0.5%
+  }
+
   .task_options {
     padding-top: 3.5%;
     padding-bottom: 3.5%;
+  }
+  
+  .div_dropdown_hidden{
+    align-self: unset;
   }
 
   @media (max-width: 430px) {
@@ -273,8 +287,14 @@ input[type="radio"]:checked::before {
       margin: 1.5%;
     }
 
+    #completed_section {
+      margin: 1.5%;
+    }
+
+  
     h1 {
-      font-size: 80px;
+      font-size: 80px; 
+       -webkit-text-stroke: 1px #000;
     }
   }
 }
