@@ -9,12 +9,24 @@
   </head>
   <body>
     <h1>Rune-List</h1>
+  
     <section id="full_section">
-      <section id="input_section">
+
+<!-- Section 1 -->
+        <div class="div_dropdown_hidden hidden" id="input_hidden" >
+            <label for="taskTitle" id="taskTitle">Input task here:</label>
+            <button class="input_drop_down_hidden" type="button">
+              <svg class="chevron_icon" viewBox="0 0 24 24">
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+            </button>
+        </div> 
+
+      <section id="input_section" >
         <form action="" id="input_form">
           <div class="div_dropdown">
             <label for="taskTitle" id="taskTitle">Input task here:</label>
-            <button class="section_drop_down">
+            <button class="input_drop_down" type="button">
               <svg class="chevron_icon" viewBox="0 0 24 24">
                 <path d="M6 9l6 6 6-6" />
               </svg>
@@ -37,10 +49,20 @@
         <button id="submit_button">Click here to continue...</button>
       </section>
 
+<!-- Section 2  -->
+         <div class="div_dropdown_hidden hidden" id="task_hidden" >
+            <label for="taskTitle" id="taskTitle">Tasks:</label>
+            <button class="task_drop_down_hidden" type="button">
+              <svg class="chevron_icon" viewBox="0 0 24 24">
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+            </button>
+        </div> 
+
       <section id="task_section">
         <div class="div_dropdown">
           <label for="">Tasks: </label>
-          <button class="section_drop_down">
+          <button class="task_drop_down">
             <svg class="chevron_icon" viewBox="0 0 24 24">
               <path d="M6 9l6 6 6-6" />
             </svg>
@@ -49,10 +71,20 @@
         <div id="taskList"></div>
       </section>
 
+<!-- Section 3 -->
+      <div class="div_dropdown_hidden hidden " id="completed_hidden" >
+        <label for="taskTitle" id="taskTitle">Completed:</label>
+        <button class="completed_drop_down_hidden" type="button">
+          <svg class="chevron_icon" viewBox="0 0 24 24">
+            <path d="M6 9l6 6 6-6" />
+          </svg>
+        </button>
+    </div> 
+
       <section id="completed_section">
         <div class="div_dropdown">
             <label for="">Completed: </label>
-            <button class="section_drop_down">
+            <button class="completed_drop_down">
               <svg class="chevron_icon" viewBox="0 0 24 24">
                 <path d="M6 9l6 6 6-6" />
               </svg>
