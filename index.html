@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rune_List</title>
+
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <h1>Rune-List</h1>
+    <section id="full_section">
+      <section id="input_section">
+        <form action="" id="input_form">
+          <div class="div_dropdown">
+            <label for="taskTitle" id="taskTitle">Input task here:</label>
+            <button class="section_drop_down">
+              <svg class="chevron_icon" viewBox="0 0 24 24">
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+            </button>
+          </div>
+          <input type="text" id="taskTitle_input" />
+
+          <label for="skill"
+            >Skill:
+            <input type="radio" name="taskType" id="skill" value="skill" />
+          </label>
+
+          <label for="task">
+            Task:
+            <input type="radio" name="taskType" id="task" value="task" />
+            <br />
+            <input type="search" hidden name="" id="subTask" />
+          </label>
+        </form>
+        <button id="submit_button">Click here to continue...</button>
+      </section>
+
+      <section id="task_section">
+        <div class="div_dropdown">
+          <label for="">Tasks: </label>
+          <button class="section_drop_down">
+            <svg class="chevron_icon" viewBox="0 0 24 24">
+              <path d="M6 9l6 6 6-6" />
+            </svg>
+          </button>
+        </div>
+        <div id="taskList"></div>
+      </section>
+
+      <section id="completed_section">
+        <div class="div_dropdown">
+            <label for="">Completed: </label>
+            <button class="section_drop_down">
+              <svg class="chevron_icon" viewBox="0 0 24 24">
+                <path d="M6 9l6 6 6-6" />
+              </svg>
+            </button>
+          </div>
+      </section>
+    </section>
+
+    <!-- <script src="script.js"></script> -->
+    <script type="module" src="./script.js"></script>
+  </body>
+</html>

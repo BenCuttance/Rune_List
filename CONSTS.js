@@ -1,0 +1,27 @@
+const runescapeSkills = [
+    { skillName: "Attack", skillEmoji: "⚔️" },
+    { skillName: "Strength", skillEmoji: "💪" },
+    { skillName: "Defence", skillEmoji: "🛡️" },
+    { skillName: "Hitpoints", skillEmoji: "❤️" },
+    { skillName: "Ranged", skillEmoji: "🏹" },
+    { skillName: "Prayer", skillEmoji: "🕊️" },
+    { skillName: "Magic", skillEmoji: "🔮" },
+    { skillName: "Cooking", skillEmoji: "🍳" },
+    { skillName: "Woodcutting", skillEmoji: "🪓" },
+    { skillName: "Fletching", skillEmoji: "🎯" },
+    { skillName: "Fishing", skillEmoji: "🎣" },
+    { skillName: "Firemaking", skillEmoji: "🔥" },
+    { skillName: "Crafting", skillEmoji: "🎨" },
+    { skillName: "Smithing", skillEmoji: "⚒️" },
+    { skillName: "Mining", skillEmoji: "⛏️" },
+    { skillName: "Herblore", skillEmoji: "🌿" },
+    { skillName: "Agility", skillEmoji: "🤸" },
+    { skillName: "Thieving", skillEmoji: "🕵️" },
+    { skillName: "Slayer", skillEmoji: "💀" },
+    { skillName: "Farming", skillEmoji: "🌾" },
+    { skillName: "Runecrafting", skillEmoji: "🌀" },
+    { skillName: "Hunter", skillEmoji: "🐾" },
+    { skillName: "Construction", skillEmoji: "🏠" },
+  ];
+
+  export { runescapeSkills }
