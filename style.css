@@ -200,7 +200,7 @@ input[type="radio"]:checked::before {
   border: none;
 }
 
-.section_drop_down_hidden{
+.section_drop_down_hidden {
   background: transparent;
   border: none;
   align-self: baseline;
@@ -219,7 +219,7 @@ input[type="radio"]:checked::before {
   padding: 1%;
   padding-left: 2%;
   padding-right: 2%;
-} 
+}
 
 .div_dropdown_hidden {
   color: var(--text-orange);
@@ -230,14 +230,14 @@ input[type="radio"]:checked::before {
   min-width: 300px;
   justify-content: space-between;
   padding: 1%;
-  padding-left: 2%;
-  padding-right: 2%;
+  /* padding-left: 2%; */
+  /* padding-right: 2%; */
+  /* margin: 1.5%; */
   align-self: baseline;
-  margin: 1.5%;
 }
 
 .div_dropdown_hidden button {
-  background-color:transparent;
+  background-color: transparent;
   border: none;
 }
 
@@ -246,10 +246,9 @@ input[type="radio"]:checked::before {
 }
 
 .div_dropdown button {
-  background-color:transparent;
+  background-color: transparent;
   border: none;
 }
-
 
 @media (max-width: 900px) {
   #full_section {
@@ -266,16 +265,19 @@ input[type="radio"]:checked::before {
   }
 
   #completed_section {
-    margin: 0.5%
+    margin: 0.5%;
   }
 
   .task_options {
     padding-top: 3.5%;
     padding-bottom: 3.5%;
   }
-  
-  .div_dropdown_hidden{
+
+  .div_dropdown_hidden {
     align-self: unset;
+    padding-left: 2%;
+    padding-right: 2%;
+    margin: 1.5%;
   }
 
   @media (max-width: 430px) {
@@ -291,10 +293,9 @@ input[type="radio"]:checked::before {
       margin: 1.5%;
     }
 
-  
     h1 {
-      font-size: 80px; 
-       -webkit-text-stroke: 1px #000;
+      font-size: 80px;
+      -webkit-text-stroke: 1px #000;
     }
   }
 }
