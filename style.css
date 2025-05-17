@@ -295,7 +295,7 @@ input[type="radio"]:checked::before {
 
     h1 {
       font-size: 80px;
-      -webkit-text-stroke: 1px #000;
+      -webkit-text-stroke: 0.5px #000;
     }
   }
 }
