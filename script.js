@@ -1,14 +1,25 @@
 let taskTitle = document.getElementById("taskTitle_input");
-let inputSection = document.getElementById('input_section')
-let taskSection = document.getElementById('task_section')
-let completedSection = document.getElementById('completed_section')
+let inputSection = document.getElementById("input_section");
+let taskSection = document.getElementById("task_section");
+let completedSection = document.getElementById("completed_section");
 let tasks = document.getElementById("taskList");
+let completedList = document.getElementById("completedList");
 import { runescapeSkills } from "./CONSTS.js";
 
 let storedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
-let completedTasks = [];
+let completedTasks = JSON.parse(localStorage.getItem("completed")) || [];
+
 
 const appendTaskToList = (string) => {
+  createTaskButtons(string, "task");
+};
+
+const appendTaskToCompleted = (string) => {
+  createTaskButtons(string, "completed");
+};
+
+const createTaskButtons = (string, listType) => {
+  let divSection;
   const wrapper = document.createElement("div");
   wrapper.classList.add("task_wrapper");
 
@@ -20,60 +31,84 @@ const appendTaskToList = (string) => {
   // Create the dropdown menu
   const dropdown = document.createElement("div");
   dropdown.classList.add("task_dropdown");
-  dropdown.innerHTML = `
-      <button class="dropdown_action" id="edit_btn">Edit</button>
-      <button class="dropdown_action" id="strike_btn">Strike through</button>
-      <button class="dropdown_action completed_btn" id="completed_btn">Completed</button>
-      <button class="dropdown_action delete_btn ">Delete</button>
-    `;
+  switch (listType) {
+    case "task":
+      dropdown.innerHTML = `
+        <button class="dropdown_action" id="edit_btn">Edit</button>
+        <button class="dropdown_action" id="strike_btn">Strike through</button>
+        <button class="dropdown_action completed_btn" id="completed_btn">Completed</button>
+        <button class="dropdown_action delete_btn ">Delete</button>
+      `;
+      divSection = tasks;
+      break;
+    case "completed":
+      dropdown.innerHTML = `
+        <button class="dropdown_action" id="strike_btn">Strike through</button>
+        <button class="dropdown_action delete_btn ">Delete</button>
+      `;
+      divSection = completedList;
+      break;
+    default:
+      console.log("Unknown task type");
+  }
   dropdown.style.display = "none";
 
   wrapper.appendChild(btn);
   wrapper.appendChild(dropdown);
-  tasks.appendChild(wrapper);
+  divSection.appendChild(wrapper);
 
   const strikeBtn = dropdown.querySelector("#strike_btn");
-  strikeBtn.addEventListener("click", () => {
-    btn.style.textDecoration =
-      btn.style.textDecoration === "line-through" ? "none" : "line-through";
-  });
+  if (strikeBtn) {
+    strikeBtn.addEventListener("click", () => {
+      btn.style.textDecoration =
+        btn.style.textDecoration === "line-through" ? "none" : "line-through";
+    });
+  }
 
   const completedBtn = dropdown.querySelector(".completed_btn");
-  completedBtn.addEventListener("click", () => {
-    // Find the actual task you're completing
-    const completedTask = storedTasks.find((task) => task.title === string);
+  if (completedBtn) {
+    completedBtn.addEventListener("click", () => {
+      const completedTask = storedTasks.find((task) => task.title === string);
 
-    if (completedTask) {
-      // Add to completed list
-      completedTasks.push(completedTask);
+      if (completedTask) {
+        completedTasks.push(completedTask);
 
-      // Remove it from current task list
-      storedTasks = storedTasks.filter((task) => task.title !== string);
+        storedTasks = storedTasks.filter(
+          (task) => task.id !== completedTask.id
+        );
 
-      // Save both
-      localStorage.setItem("tasks", JSON.stringify(storedTasks));
-      localStorage.setItem("completed", JSON.stringify(completedTasks));
+        console.log(completedTask)
+        localStorage.setItem("tasks", JSON.stringify(storedTasks));
+        localStorage.setItem("completed", JSON.stringify(completedTasks));
 
-      console.log("Completed:", completedTasks);
+        appendTaskToCompleted(completedTask.title);
+        wrapper.remove();
+      }
+    });
+  }
 
-      // Remove from DOM
+  const deleteBtn = dropdown.querySelector(".delete_btn");
+  if (deleteBtn) {
+    deleteBtn.addEventListener("click", () => {
+      let listToUpdate = listType === "completed" ? completedTasks : storedTasks;
+  
+      listToUpdate = listToUpdate.filter((task) => task.title !== string);
+  
+      if (listType === "completed") {
+        completedTasks = listToUpdate;
+        localStorage.setItem("completed", JSON.stringify(completedTasks));
+      } else {
+        storedTasks = listToUpdate;
+        localStorage.setItem("tasks", JSON.stringify(storedTasks));
+      }
+  
       wrapper.remove();
-    }
-  });
-
-  const deleteBtn = dropdown.querySelector(".delete_btn")
-  deleteBtn.addEventListener("click", () => {
-    storedTasks = storedTasks.filter((task) => task.title !== string)
-
-    localStorage.setItem("tasks", JSON.stringify(storedTasks))
-
-    wrapper.remove()
-  })
+    });
+  }
 
   btn.addEventListener("click", () => {
     dropdown.style.display =
       dropdown.style.display === "none" ? "block" : "none";
-    // taskOptions();
   });
 };
 
@@ -83,9 +118,13 @@ const renderStoredTasks = () => {
   });
 };
 
-const submitTask = (e) => {
-  //   e.preventDefault();
+const renderCompletedTasks = () => {
+    completedTasks.forEach((task) => {
+        appendTaskToCompleted(task.title)
+    })
+};
 
+const submitTask = (e) => {
   const userInput = taskTitle.value;
 
   const selectedRadio = document.querySelector(
@@ -105,8 +144,10 @@ const submitTask = (e) => {
   storedTasks.push({
     title: newString,
     taskType: taskType,
-    id: storedTasks.length + 1,
+    id: Date.now(),
   });
+
+  console.log(storedTasks);
 
   localStorage.setItem("tasks", JSON.stringify(storedTasks));
   clearForm();
@@ -156,45 +197,48 @@ const findSkillByName = (name) => {
   if (matchedSkill) return matchedSkill.skillEmoji;
 };
 
-renderStoredTasks();
+const hideSection = (toHideId, toShowId) => {
+  const hide = document.getElementById(toHideId);
+  const show = document.getElementById(toShowId);
 
+  if (hide) hide.style.display = "none";
+  if (show) show.style.display = "flex";
+};
 
-  const hideSection = (toHideId, toShowId) => {
-    const hide = document.getElementById(toHideId);
-    const show = document.getElementById(toShowId);
-  
-  
-    if (hide) hide.style.display ="none";
-    if (show) show.style.display = "flex";
-  };
+// input_section document selectors (Section 1)
+document.querySelector(".input_drop_down").addEventListener("click", () => {
+  hideSection("input_section", "input_hidden");
+});
 
-  // input_section document selectors (Section 1)
-  document.querySelector(".input_drop_down").addEventListener("click", () => {
-    hideSection("input_section", "input_hidden");
-  });
-  
-  document.querySelector(".input_drop_down_hidden").addEventListener("click", () => {
+document
+  .querySelector(".input_drop_down_hidden")
+  .addEventListener("click", () => {
     hideSection("input_hidden", "input_section");
   });
 
-   // task_section document selectors (Section 2)
-  document.querySelector(".task_drop_down").addEventListener("click", () => {
-    hideSection("task_section", "task_hidden");
-  });
-  
-  document.querySelector(".task_drop_down_hidden").addEventListener("click", () => {
+// task_section document selectors (Section 2)
+document.querySelector(".task_drop_down").addEventListener("click", () => {
+  hideSection("task_section", "task_hidden");
+});
+
+document
+  .querySelector(".task_drop_down_hidden")
+  .addEventListener("click", () => {
     hideSection("task_hidden", "task_section");
   });
 
-   // completed_section document selectors (Section 3)
-  document.querySelector(".completed_drop_down").addEventListener("click", () => {
-    hideSection("completed_section", "completed_hidden");
-  });
-  
-  document.querySelector(".completed_drop_down_hidden").addEventListener("click", () => {
+// completed_section document selectors (Section 3)
+document.querySelector(".completed_drop_down").addEventListener("click", () => {
+  hideSection("completed_section", "completed_hidden");
+});
+
+document
+  .querySelector(".completed_drop_down_hidden")
+  .addEventListener("click", () => {
     hideSection("completed_hidden", "completed_section");
   });
 
-
 document.getElementById("submit_button").addEventListener("click", submitTask);
 
+renderStoredTasks();
+renderCompletedTasks();
