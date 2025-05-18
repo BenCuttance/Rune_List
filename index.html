@@ -25,32 +25,43 @@
             </button>
         </div> 
 
-      <section id="input_section" >
-        <form action="" id="input_form">
-          <div class="div_dropdown">
-            <label for="taskTitle" id="taskTitle">Input task here:</label>
-            <button class="input_drop_down" type="button">
-              <svg class="chevron_icon" viewBox="0 0 24 24">
-                <path d="M6 9l6 6 6-6" />
-              </svg>
+        <section id="input_section">
+            <form id="input_form">
+              <div class="div_dropdown">
+                <label for="taskTitle_input">Input task here:</label>
+                <button class="input_drop_down" type="button">
+                  <svg class="chevron_icon" viewBox="0 0 24 24">
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
+                </button>
+              </div>
+          
+              <input type="text" id="taskTitle_input" />
+          
+              <label for="skill">
+                Skill:
+                <input type="radio" name="taskType" id="skill" value="skill" />
+              </label>
+          
+              <label for="task">
+                Sub-Task:
+                <input type="radio" name="taskType" id="task" value="task" />
+              </label>
+          
+              <div>
+                <input type="text" id="subTask" />
+                <button type="button" id="addSubTask">+</button>
+              </div>
+          
+              <!-- sub-tasks displayed -->
+              <div id="displaySubTasks"></div>
+            </form>
+          
+            <button id="submit_button" class="sub-input" type="button">
+              Click here to continue...
             </button>
-          </div>
-          <input type="text" id="taskTitle_input" />
-
-          <label for="skill"
-            >Skill:
-            <input type="radio" name="taskType" id="skill" value="skill" />
-          </label>
-
-          <label for="task">
-            Task:
-            <input type="radio" name="taskType" id="task" value="task" />
-            <br />
-            <input type="search" hidden name="" id="subTask" />
-          </label>
-        </form>
-        <button id="submit_button">Click here to continue...</button>
-      </section>
+          </section>
+          
 
 <!-- Section 2  -->
          <div class="div_dropdown_hidden hidden" id="task_hidden" >
