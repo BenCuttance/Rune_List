@@ -1,7 +1,4 @@
 let taskTitle = document.getElementById("taskTitle_input");
-let inputSection = document.getElementById("input_section");
-let taskSection = document.getElementById("task_section");
-let completedSection = document.getElementById("completed_section");
 let tasks = document.getElementById("taskList");
 let completedList = document.getElementById("completedList");
 import { runescapeSkills } from "./CONSTS.js";
@@ -9,6 +6,17 @@ import { runescapeSkills } from "./CONSTS.js";
 let storedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
 let completedTasks = JSON.parse(localStorage.getItem("completed")) || [];
 
+window.addEventListener('load', () => {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js')
+        .then(registration => {
+          console.log('Service Worker registered:', registration);
+        })
+        .catch(error => {
+          console.error('Service Worker registration failed:', error);
+        });
+    }
+  });
 
 const appendTaskToList = (string) => {
   createTaskButtons(string, "task");
