@@ -1,22 +1,27 @@
 let taskTitle = document.getElementById("taskTitle_input");
 let tasks = document.getElementById("taskList");
 let completedList = document.getElementById("completedList");
+let subTask = document.getElementById("subTask");
+let displaySubTasks = document.getElementById('displaySubTasks')
+let addSubTaskBtn = document.getElementById('addSubTask')
 import { runescapeSkills } from "./CONSTS.js";
 
 let storedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
 let completedTasks = JSON.parse(localStorage.getItem("completed")) || [];
+let currentSubTasks = []
 
-window.addEventListener('load', () => {
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('sw.js')
-        .then(registration => {
-          console.log('Service Worker registered:', registration);
-        })
-        .catch(error => {
-          console.error('Service Worker registration failed:', error);
-        });
-    }
-  });
+window.addEventListener("load", () => {
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker
+      .register("sw.js")
+      .then((registration) => {
+        console.log("Service Worker registered:", registration);
+      })
+      .catch((error) => {
+        console.error("Service Worker registration failed:", error);
+      });
+  }
+});
 
 const appendTaskToList = (string) => {
   createTaskButtons(string, "task");
@@ -56,9 +61,17 @@ const createTaskButtons = (string, listType) => {
       `;
       divSection = completedList;
       break;
+      case "subTask":
+        dropdown.innerHTML = `
+          <button type="button" class="dropdown_action" id="strike_btn">Strike through</button>
+          <button type="button" class="dropdown_action delete_btn">Delete</button>
+        `;
+        divSection = displaySubTasks;
+        break;
     default:
       console.log("Unknown task type");
   }
+
   dropdown.style.display = "none";
 
   wrapper.appendChild(btn);
@@ -85,7 +98,7 @@ const createTaskButtons = (string, listType) => {
           (task) => task.id !== completedTask.id
         );
 
-        console.log(completedTask)
+        console.log(completedTask);
         localStorage.setItem("tasks", JSON.stringify(storedTasks));
         localStorage.setItem("completed", JSON.stringify(completedTasks));
 
@@ -98,10 +111,11 @@ const createTaskButtons = (string, listType) => {
   const deleteBtn = dropdown.querySelector(".delete_btn");
   if (deleteBtn) {
     deleteBtn.addEventListener("click", () => {
-      let listToUpdate = listType === "completed" ? completedTasks : storedTasks;
-  
+      let listToUpdate =
+        listType === "completed" ? completedTasks : storedTasks;
+
       listToUpdate = listToUpdate.filter((task) => task.title !== string);
-  
+
       if (listType === "completed") {
         completedTasks = listToUpdate;
         localStorage.setItem("completed", JSON.stringify(completedTasks));
@@ -109,8 +123,9 @@ const createTaskButtons = (string, listType) => {
         storedTasks = listToUpdate;
         localStorage.setItem("tasks", JSON.stringify(storedTasks));
       }
-  
+
       wrapper.remove();
+      console.log("deleted")
     });
   }
 
@@ -127,9 +142,9 @@ const renderStoredTasks = () => {
 };
 
 const renderCompletedTasks = () => {
-    completedTasks.forEach((task) => {
-        appendTaskToCompleted(task.title)
-    })
+  completedTasks.forEach((task) => {
+    appendTaskToCompleted(task.title);
+  });
 };
 
 const submitTask = (e) => {
@@ -146,14 +161,18 @@ const submitTask = (e) => {
   let matchedInput = skillSearch(userInput);
   let newString = `${matchedInput} ${taskTitle.value} (${taskType})`;
   console.log(matchedInput);
-
-  appendTaskToList(newString);
-
+  console.log("BEFORE: ", currentSubTasks)
   storedTasks.push({
     title: newString,
+    subTasks: [...currentSubTasks],
     taskType: taskType,
     id: Date.now(),
   });
+  currentSubTasks = []
+  console.log("AFTER: ", currentSubTasks)
+  appendTaskToList(newString);
+
+
 
   console.log(storedTasks);
 
@@ -174,8 +193,10 @@ const clearForm = () => {
   const selectedRadio = document.querySelector(
     'input[name="taskType"]:checked'
   );
-
+  
+  document.getElementById("displaySubTasks").innerHTML = "";
   taskTitle.value = "";
+  subTask.value = "";
   if (selectedRadio) selectedRadio.checked = false;
 };
 
@@ -246,7 +267,26 @@ document
     hideSection("completed_hidden", "completed_section");
   });
 
+
+const addSubTask = () => {
+    if (subTask.value !== ""){
+    createTaskButtons(subTask.value, "subTask")
+    currentSubTasks.push(subTask.value)
+    subTask.value = ""
+    }
+console.log(currentSubTasks)
+}
+
 document.getElementById("submit_button").addEventListener("click", submitTask);
+
+document.getElementById("input_form").addEventListener("submit", (e) => {
+    e.preventDefault();
+  });
+
+document.getElementById("addSubTask").addEventListener("click", (e) => {
+    e.preventDefault();
+    addSubTask()
+  });
 
 renderStoredTasks();
 renderCompletedTasks();
