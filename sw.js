@@ -1,12 +1,3 @@
-// self.addEventListener("install", (e) => {
-//   e.waitUntil(
-//     caches.open("static").then((cache) => {
-//       return cache.addAll(["./", "./style.css", "./images/Rune-List192.png"]);
-//     })
-//   );
-//   console.log("Install!");
-// });
-
 self.addEventListener("install", (e) => {
     e.waitUntil(
       caches.open("static").then((cache) => {
