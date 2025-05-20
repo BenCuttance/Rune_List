@@ -4,7 +4,7 @@ let completedList = document.getElementById("completedList");
 let subTask = document.getElementById("subTask");
 let displaySubTasks = document.getElementById('displaySubTasks')
 let addSubTaskBtn = document.getElementById('addSubTask')
-import { runescapeSkills } from "./CONSTS.js";
+import { runescapeSkills } from "../CONSTS.js";
 
 let storedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
 let completedTasks = JSON.parse(localStorage.getItem("completed")) || [];
