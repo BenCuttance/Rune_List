@@ -2,13 +2,28 @@ let taskTitle = document.getElementById("taskTitle_input");
 let tasks = document.getElementById("taskList");
 let completedList = document.getElementById("completedList");
 let subTask = document.getElementById("subTask");
-let displaySubTasks = document.getElementById('displaySubTasks')
-let addSubTaskBtn = document.getElementById('addSubTask')
+
+let displaySubTasks = document.getElementById("displaySubTasks");
+let addSubTaskBtn = document.getElementById("addSubTask");
 import { runescapeSkills } from "../CONSTS.js";
+import { strikeThroughButton } from "./createTasks.js";
 
 let storedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
-let completedTasks = JSON.parse(localStorage.getItem("completed")) || [];
-let currentSubTasks = []
+
+//TODO: Back to local storage
+let completedTasks =
+  // JSON.parse(localStorage.getItem("completed")) ||
+  [
+    {
+      title: "Test Task",
+      subTasks: ["Sub 1", "Sub 2"],
+      taskType: "Task",
+      id: Date.now(),
+    },
+  ];
+console.log(completedTasks);
+let currentSubTasks = [];
+
 
 window.addEventListener("load", () => {
   if ("serviceWorker" in navigator) {
@@ -23,15 +38,23 @@ window.addEventListener("load", () => {
   }
 });
 
-const appendTaskToList = (string) => {
-  createTaskButtons(string, "task");
-};
 
-const appendTaskToCompleted = (string) => {
-  createTaskButtons(string, "completed");
-};
+// const appendTaskToList = (newTaskObject) => {
+//   createTaskButtons(newTaskObject, "task");
+// };
 
-const createTaskButtons = (string, listType) => {
+//TODO: delete?
+// const appendTaskToCompleted = (string) => {
+//   createTaskButtons(string, "completed");
+// };
+
+
+const getTaskID = () => {
+
+}
+
+const createTaskButtons = (taskObject, listType) => {
+
   let divSection;
   const wrapper = document.createElement("div");
   wrapper.classList.add("task_wrapper");
@@ -39,7 +62,9 @@ const createTaskButtons = (string, listType) => {
   // Create the task button
   const btn = document.createElement("button");
   btn.classList.add("task_options");
-  btn.textContent = "•  " + string;
+
+  btn.textContent = "•  " + taskObject.title;
+
 
   // Create the dropdown menu
   const dropdown = document.createElement("div");
@@ -61,13 +86,14 @@ const createTaskButtons = (string, listType) => {
       `;
       divSection = completedList;
       break;
-      case "subTask":
-        dropdown.innerHTML = `
+    case "subTask":
+      dropdown.innerHTML = `
           <button type="button" class="dropdown_action" id="strike_btn">Strike through</button>
           <button type="button" class="dropdown_action delete_btn">Delete</button>
         `;
-        divSection = displaySubTasks;
-        break;
+      divSection = displaySubTasks;
+      break;
+
     default:
       console.log("Unknown task type");
   }
@@ -78,13 +104,10 @@ const createTaskButtons = (string, listType) => {
   wrapper.appendChild(dropdown);
   divSection.appendChild(wrapper);
 
-  const strikeBtn = dropdown.querySelector("#strike_btn");
-  if (strikeBtn) {
-    strikeBtn.addEventListener("click", () => {
-      btn.style.textDecoration =
-        btn.style.textDecoration === "line-through" ? "none" : "line-through";
-    });
-  }
+
+  //STRIKETHROUGH BUTTON
+  strikeThroughButton(dropdown, btn)
+
 
   const completedBtn = dropdown.querySelector(".completed_btn");
   if (completedBtn) {
@@ -125,26 +148,74 @@ const createTaskButtons = (string, listType) => {
       }
 
       wrapper.remove();
-      console.log("deleted")
+
+      console.log("deleted");
+
     });
   }
 
   btn.addEventListener("click", () => {
     dropdown.style.display =
-      dropdown.style.display === "none" ? "block" : "none";
+
+    dropdown.style.display === "none" ? "block" : "none";
   });
 };
 
+const addTaskToCompleted = (input) => {
+  const divSection = document.getElementById("completed_section");
+
+  // Normalize to array if it's a single object
+  const tasks = Array.isArray(input) ? input : [input];
+
+  tasks.forEach((task) => {
+    const wrapper = document.createElement("div");
+    wrapper.classList.add("task_wrapper");
+
+    // Create the task button
+    const btn = document.createElement("button");
+    btn.classList.add("task_options");
+    btn.textContent = "•  " + task.title;
+
+    // Create the dropdown menu
+    const dropdown = document.createElement("div");
+    dropdown.classList.add("task_dropdown");
+
+    dropdown.innerHTML = `
+      <button class="dropdown_action" id="strike_btn">Strike through</button>
+      <button class="dropdown_action delete_btn">Delete</button>
+    `;
+
+    dropdown.style.display = "none";
+    wrapper.appendChild(btn);
+
+    btn.addEventListener("click", () => {
+      dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
+    });
+
+    wrapper.appendChild(dropdown);
+    divSection.appendChild(wrapper);
+
+    strikeThroughButton(dropdown, btn);
+  });
+};
+
+// EDIT BUTTON
+
+
+// COMPLETED BUTTON
+
+
+
 const renderStoredTasks = () => {
   storedTasks.forEach((task) => {
-    appendTaskToList(task.title);
+    // appendTaskToList(task.title);
+    createTaskButtons(task, "task")
+
   });
 };
 
 const renderCompletedTasks = () => {
-  completedTasks.forEach((task) => {
-    appendTaskToCompleted(task.title);
-  });
+  addTaskToCompleted(completedTasks);
 };
 
 const submitTask = (e) => {
@@ -161,17 +232,20 @@ const submitTask = (e) => {
   let matchedInput = skillSearch(userInput);
   let newString = `${matchedInput} ${taskTitle.value} (${taskType})`;
   console.log(matchedInput);
-  console.log("BEFORE: ", currentSubTasks)
-  storedTasks.push({
+
+  console.log("BEFORE: ", currentSubTasks);
+
+  let newTaskObject = {
     title: newString,
     subTasks: [...currentSubTasks],
     taskType: taskType,
     id: Date.now(),
-  });
-  currentSubTasks = []
-  console.log("AFTER: ", currentSubTasks)
-  appendTaskToList(newString);
-
+  }
+  storedTasks.push(newTaskObject);
+  currentSubTasks = [];
+  console.log("AFTER: ", currentSubTasks);
+  // appendTaskToList(newTaskObject);
+  createTaskButtons(newTaskObject, "task")
 
 
   console.log(storedTasks);
@@ -193,7 +267,7 @@ const clearForm = () => {
   const selectedRadio = document.querySelector(
     'input[name="taskType"]:checked'
   );
-  
+
   document.getElementById("displaySubTasks").innerHTML = "";
   taskTitle.value = "";
   subTask.value = "";
@@ -268,25 +342,28 @@ document
   });
 
 
+// TODO: ADDS SUBTASK TO DIV AND CONSOLE LOGS FOR NOW WILL NEED TO FIX
 const addSubTask = () => {
-    if (subTask.value !== ""){
-    createTaskButtons(subTask.value, "subTask")
-    currentSubTasks.push(subTask.value)
-    subTask.value = ""
-    }
-console.log(currentSubTasks)
-}
+  if (subTask.value !== "") {
+    createTaskButtons(subTask.value, "subTask");
+    currentSubTasks.push(subTask.value);
+    subTask.value = "";
+  }
+  console.log(currentSubTasks);
+};
+
 
 document.getElementById("submit_button").addEventListener("click", submitTask);
 
 document.getElementById("input_form").addEventListener("submit", (e) => {
-    e.preventDefault();
-  });
+  e.preventDefault();
+});
 
 document.getElementById("addSubTask").addEventListener("click", (e) => {
-    e.preventDefault();
-    addSubTask()
-  });
+  e.preventDefault();
+  addSubTask();
+});
+
 
 renderStoredTasks();
 renderCompletedTasks();
