@@ -2,6 +2,7 @@ let taskTitle = document.getElementById("taskTitle_input");
 let tasks = document.getElementById("taskList");
 let completedList = document.getElementById("completedList");
 let subTask = document.getElementById("subTask");
+
 let displaySubTasks = document.getElementById("displaySubTasks");
 let addSubTaskBtn = document.getElementById("addSubTask");
 import { runescapeSkills } from "../CONSTS.js";
@@ -23,6 +24,7 @@ let completedTasks =
 console.log(completedTasks);
 let currentSubTasks = [];
 
+
 window.addEventListener("load", () => {
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker
@@ -35,6 +37,7 @@ window.addEventListener("load", () => {
       });
   }
 });
+
 
 // const appendTaskToList = (newTaskObject) => {
 //   createTaskButtons(newTaskObject, "task");
@@ -51,6 +54,7 @@ const getTaskID = () => {
 }
 
 const createTaskButtons = (taskObject, listType) => {
+
   let divSection;
   const wrapper = document.createElement("div");
   wrapper.classList.add("task_wrapper");
@@ -60,7 +64,9 @@ const createTaskButtons = (taskObject, listType) => {
   // Create the task button
   const btn = document.createElement("button");
   btn.classList.add("task_options");
+
   btn.textContent = "•  " + taskObject.title;
+
 
   // Create the dropdown menu
   const dropdown = document.createElement("div");
@@ -82,6 +88,7 @@ const createTaskButtons = (taskObject, listType) => {
         `;
       divSection = displaySubTasks;
       break;
+
     default:
       console.log("Unknown task type");
   }
@@ -122,6 +129,7 @@ const createTaskButtons = (taskObject, listType) => {
 
   btn.addEventListener("click", () => {
     dropdown.style.display =
+
     dropdown.style.display === "none" ? "block" : "none";
   });
 };
@@ -177,6 +185,7 @@ const renderStoredTasks = () => {
   storedTasks.forEach((task) => {
     // appendTaskToList(task.title);
     createTaskButtons(task, "task")
+
   });
 };
 
@@ -198,6 +207,7 @@ const submitTask = (e) => {
   let matchedInput = skillSearch(userInput);
   let newString = `${matchedInput} ${taskTitle.value} (${taskType})`;
   console.log(matchedInput);
+
   console.log("BEFORE: ", currentSubTasks);
 
   let newTaskObject = {
@@ -211,6 +221,7 @@ const submitTask = (e) => {
   console.log("AFTER: ", currentSubTasks);
   // appendTaskToList(newTaskObject);
   createTaskButtons(newTaskObject, "task")
+
 
   console.log(storedTasks);
 
@@ -316,6 +327,7 @@ const addSubTask = () => {
   console.log(currentSubTasks);
 };
 
+
 document.getElementById("submit_button").addEventListener("click", submitTask);
 
 document.getElementById("input_form").addEventListener("submit", (e) => {
@@ -326,6 +338,7 @@ document.getElementById("addSubTask").addEventListener("click", (e) => {
   e.preventDefault();
   addSubTask();
 });
+
 
 renderStoredTasks();
 renderCompletedTasks();
