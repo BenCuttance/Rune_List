@@ -6,7 +6,7 @@ let subTask = document.getElementById("subTask");
 let displaySubTasks = document.getElementById("displaySubTasks");
 let addSubTaskBtn = document.getElementById("addSubTask");
 import { runescapeSkills } from "../CONSTS.js";
-import { strikeThroughButton } from "./createTasks.js";
+import { strikeThroughButton, deleteButton } from "./createTasks.js";
 
 let storedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
@@ -58,6 +58,8 @@ const createTaskButtons = (taskObject, listType) => {
   let divSection;
   const wrapper = document.createElement("div");
   wrapper.classList.add("task_wrapper");
+  wrapper.id = taskObject.id
+
 
   // Create the task button
   const btn = document.createElement("button");
@@ -79,13 +81,6 @@ const createTaskButtons = (taskObject, listType) => {
       `;
       divSection = tasks;
       break;
-    case "completed":
-      dropdown.innerHTML = `
-        <button class="dropdown_action" id="strike_btn">Strike through</button>
-        <button class="dropdown_action delete_btn ">Delete</button>
-      `;
-      divSection = completedList;
-      break;
     case "subTask":
       dropdown.innerHTML = `
           <button type="button" class="dropdown_action" id="strike_btn">Strike through</button>
@@ -104,10 +99,11 @@ const createTaskButtons = (taskObject, listType) => {
   wrapper.appendChild(dropdown);
   divSection.appendChild(wrapper);
 
-
-  //STRIKETHROUGH BUTTON
+  // STRIKETHROUGH BUTTON
   strikeThroughButton(dropdown, btn)
 
+  // DELETE BUTTON
+  deleteButton(dropdown, wrapper, "tasks", storedTasks)
 
   const completedBtn = dropdown.querySelector(".completed_btn");
   if (completedBtn) {
@@ -128,29 +124,6 @@ const createTaskButtons = (taskObject, listType) => {
         appendTaskToCompleted(completedTask.title);
         wrapper.remove();
       }
-    });
-  }
-
-  const deleteBtn = dropdown.querySelector(".delete_btn");
-  if (deleteBtn) {
-    deleteBtn.addEventListener("click", () => {
-      let listToUpdate =
-        listType === "completed" ? completedTasks : storedTasks;
-
-      listToUpdate = listToUpdate.filter((task) => task.title !== string);
-
-      if (listType === "completed") {
-        completedTasks = listToUpdate;
-        localStorage.setItem("completed", JSON.stringify(completedTasks));
-      } else {
-        storedTasks = listToUpdate;
-        localStorage.setItem("tasks", JSON.stringify(storedTasks));
-      }
-
-      wrapper.remove();
-
-      console.log("deleted");
-
     });
   }
 
@@ -196,6 +169,8 @@ const addTaskToCompleted = (input) => {
     divSection.appendChild(wrapper);
 
     strikeThroughButton(dropdown, btn);
+    deleteButton(dropdown, wrapper, "completed", completedTasks)
+
   });
 };
 
