@@ -30,6 +30,4 @@ const deleteButton = (dropdown, wrapper, listType, list) => {
   }
 };
 
-  
-
 export { strikeThroughButton, deleteButton }
