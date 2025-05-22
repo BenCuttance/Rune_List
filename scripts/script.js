@@ -174,13 +174,6 @@ const addTaskToCompleted = (input) => {
   });
 };
 
-// EDIT BUTTON
-
-
-// COMPLETED BUTTON
-
-
-
 const renderStoredTasks = () => {
   storedTasks.forEach((task) => {
     // appendTaskToList(task.title);
