@@ -32,6 +32,7 @@ const deleteButton = (dropdown, wrapper, listType, list) => {
   }
 };
 
+
 // COMPLETED BUTTON
 
 const completedButton = (dropdown, wrapper, startingArray, endingArray) => {
@@ -69,3 +70,4 @@ const completedButton = (dropdown, wrapper, startingArray, endingArray) => {
 };
 
 export { strikeThroughButton, deleteButton, completedButton };
+
