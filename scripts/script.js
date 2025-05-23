@@ -6,21 +6,14 @@ let subTask = document.getElementById("subTask");
 let displaySubTasks = document.getElementById("displaySubTasks");
 let addSubTaskBtn = document.getElementById("addSubTask");
 import { runescapeSkills } from "../CONSTS.js";
-import { strikeThroughButton, deleteButton } from "./createTasks.js";
+import { strikeThroughButton, deleteButton, completedButton } from "./createTasks.js";
 
 let storedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
 //TODO: Back to local storage
 let completedTasks =
-  // JSON.parse(localStorage.getItem("completed")) ||
-  [
-    {
-      title: "Test Task",
-      subTasks: ["Sub 1", "Sub 2"],
-      taskType: "Task",
-      id: Date.now(),
-    },
-  ];
+  JSON.parse(localStorage.getItem("completed")) || [];
+  
 console.log(completedTasks);
 let currentSubTasks = [];
 
@@ -49,10 +42,6 @@ window.addEventListener("load", () => {
 // };
 
 
-const getTaskID = () => {
-
-}
-
 const createTaskButtons = (taskObject, listType) => {
 
   let divSection;
@@ -71,33 +60,18 @@ const createTaskButtons = (taskObject, listType) => {
   // Create the dropdown menu
   const dropdown = document.createElement("div");
   dropdown.classList.add("task_dropdown");
-  switch (listType) {
-    case "task":
       dropdown.innerHTML = `
         <button class="dropdown_action" id="edit_btn">Edit</button>
         <button class="dropdown_action" id="strike_btn">Strike through</button>
         <button class="dropdown_action completed_btn" id="completed_btn">Completed</button>
         <button class="dropdown_action delete_btn ">Delete</button>
       `;
-      divSection = tasks;
-      break;
-    case "subTask":
-      dropdown.innerHTML = `
-          <button type="button" class="dropdown_action" id="strike_btn">Strike through</button>
-          <button type="button" class="dropdown_action delete_btn">Delete</button>
-        `;
-      divSection = displaySubTasks;
-      break;
-
-    default:
-      console.log("Unknown task type");
-  }
 
   dropdown.style.display = "none";
 
   wrapper.appendChild(btn);
   wrapper.appendChild(dropdown);
-  divSection.appendChild(wrapper);
+  tasks.appendChild(wrapper);
 
   // STRIKETHROUGH BUTTON
   strikeThroughButton(dropdown, btn)
@@ -105,27 +79,8 @@ const createTaskButtons = (taskObject, listType) => {
   // DELETE BUTTON
   deleteButton(dropdown, wrapper, "tasks", storedTasks)
 
-  const completedBtn = dropdown.querySelector(".completed_btn");
-  if (completedBtn) {
-    completedBtn.addEventListener("click", () => {
-      const completedTask = storedTasks.find((task) => task.title === string);
-
-      if (completedTask) {
-        completedTasks.push(completedTask);
-
-        storedTasks = storedTasks.filter(
-          (task) => task.id !== completedTask.id
-        );
-
-        console.log(completedTask);
-        localStorage.setItem("tasks", JSON.stringify(storedTasks));
-        localStorage.setItem("completed", JSON.stringify(completedTasks));
-
-        appendTaskToCompleted(completedTask.title);
-        wrapper.remove();
-      }
-    });
-  }
+  // COMPELTED BUTTON
+  completedButton(dropdown, wrapper, storedTasks, completedTasks)
 
   btn.addEventListener("click", () => {
     dropdown.style.display =
@@ -135,6 +90,7 @@ const createTaskButtons = (taskObject, listType) => {
 };
 
 const addTaskToCompleted = (input) => {
+
   const divSection = document.getElementById("completed_section");
 
   // Normalize to array if it's a single object
@@ -143,6 +99,7 @@ const addTaskToCompleted = (input) => {
   tasks.forEach((task) => {
     const wrapper = document.createElement("div");
     wrapper.classList.add("task_wrapper");
+    wrapper.id = task.id
 
     // Create the task button
     const btn = document.createElement("button");
@@ -176,8 +133,7 @@ const addTaskToCompleted = (input) => {
 
 const renderStoredTasks = () => {
   storedTasks.forEach((task) => {
-    // appendTaskToList(task.title);
-    createTaskButtons(task, "task")
+    createTaskButtons(task)
 
   });
 };
@@ -213,7 +169,7 @@ const submitTask = (e) => {
   currentSubTasks = [];
   console.log("AFTER: ", currentSubTasks);
   // appendTaskToList(newTaskObject);
-  createTaskButtons(newTaskObject, "task")
+  createTaskButtons(newTaskObject)
 
 
   console.log(storedTasks);
@@ -311,14 +267,14 @@ document
 
 
 // TODO: ADDS SUBTASK TO DIV AND CONSOLE LOGS FOR NOW WILL NEED TO FIX
-const addSubTask = () => {
-  if (subTask.value !== "") {
-    createTaskButtons(subTask.value, "subTask");
-    currentSubTasks.push(subTask.value);
-    subTask.value = "";
-  }
-  console.log(currentSubTasks);
-};
+// const addSubTask = () => {
+//   if (subTask.value !== "") {
+//     createTaskButtons(subTask.value, "subTask");
+//     currentSubTasks.push(subTask.value);
+//     subTask.value = "";
+//   }
+//   console.log(currentSubTasks);
+// };
 
 
 document.getElementById("submit_button").addEventListener("click", submitTask);
@@ -335,3 +291,5 @@ document.getElementById("addSubTask").addEventListener("click", (e) => {
 
 renderStoredTasks();
 renderCompletedTasks();
+
+export { addTaskToCompleted }
