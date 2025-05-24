@@ -43,9 +43,26 @@ h1 {
   letter-spacing: 1px;
 }
 
+.title-img {
+  display: block;
+  margin: 0 auto;
+  max-width: 50%;
+  height: auto;
+  filter: drop-shadow(0 2px 4px black); /* Adds depth */
+  margin-top: 2rem;
+  margin-bottom: 3rem;
+}
+
 body {
   font-family: var(--font-runescape);
-  background-color: var(--bg-main);
+  background-image: url("./images/RS-background.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-color: rgba(0, 0, 0, 0.4);
+  background-blend-mode: overlay;
+  min-height: 100vh;          /* 👈 allows scroll to expand background */
+  background-attachment: fixed; 
 }
 
 #full_section {
@@ -191,9 +208,9 @@ input[type="radio"]:checked::before {
 }
 
 #displaySubTasks {
-max-height: 70px;
-overflow-y: auto;
-padding: 0.5rem; 
+  max-height: 70px;
+  overflow-y: auto;
+  padding: 0.5rem;
 }
 
 #displaySubTasks::-webkit-scrollbar {
@@ -221,8 +238,8 @@ padding: 0.5rem;
   font-size: 18px;
 }
 
-.task_options:hover{
-  color: #FF0000; 
+.task_options:hover {
+  color: #ff0000;
 }
 
 .task_options > li {
@@ -314,6 +331,10 @@ padding: 0.5rem;
 
   #completed_section {
     margin: 0.5%;
+  }
+
+  .title-img {
+    max-width: 100%;
   }
 
   .task_options {
