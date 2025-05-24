@@ -113,6 +113,7 @@ const addTaskToCompleted = (input) => {
     dropdown.innerHTML = `
       <button class="dropdown_action" id="strike_btn">Strike through</button>
       <button class="dropdown_action delete_btn">Delete</button>
+      <button class="dropdown_action completed_btn"  id="completed_btn"> Move</button>
     `;
 
     dropdown.style.display = "none";
@@ -127,6 +128,7 @@ const addTaskToCompleted = (input) => {
 
     strikeThroughButton(dropdown, btn);
     deleteButton(dropdown, wrapper, "completed", completedTasks)
+    completedButton(dropdown, wrapper, completedTasks, storedTasks, "Move completed to tasks")
 
   });
 };
@@ -292,4 +294,4 @@ document.getElementById("addSubTask").addEventListener("click", (e) => {
 renderStoredTasks();
 renderCompletedTasks();
 
-export { addTaskToCompleted }
+export { addTaskToCompleted, createTaskButtons }

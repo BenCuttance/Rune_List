@@ -1,4 +1,4 @@
-import { addTaskToCompleted } from "./script.js";
+import { addTaskToCompleted, createTaskButtons } from "./script.js";
 
 // STRIKETHROUGH BUTTON
 const strikeThroughButton = (dropdown, btn) => {
@@ -32,21 +32,26 @@ const deleteButton = (dropdown, wrapper, listType, list) => {
   }
 };
 
-
 // COMPLETED BUTTON
-
-const completedButton = (dropdown, wrapper, startingArray, endingArray) => {
+const completedButton = (
+  dropdown,
+  wrapper,
+  startingArray,
+  endingArray,
+  listType = "completed"
+) => {
   const completedBtn = dropdown.querySelector(".completed_btn");
   console.log("BEFORE:", startingArray);
   if (completedBtn) {
     completedBtn.addEventListener("click", () => {
+      let startingArrayStorage;
+      let endingArrayStorage;
+
       const taskId = Number(wrapper.id);
 
       const task = startingArray.find((task) => task.id === taskId);
 
       if (task) {
-        addTaskToCompleted(task);
-
         // Remove from starting array
         const updatedStart = startingArray.filter((t) => t.id !== taskId);
         startingArray.length = 0;
@@ -57,9 +62,19 @@ const completedButton = (dropdown, wrapper, startingArray, endingArray) => {
         // Add to ending array
         endingArray.push(task);
 
+        if (listType === "completed") {
+          addTaskToCompleted(task);
+          startingArrayStorage = "tasks";
+          endingArrayStorage = "completed";
+        } else {
+          createTaskButtons(task);
+          startingArrayStorage = "completed";
+          endingArrayStorage = "tasks";
+        }
+
         // Save updates
-        localStorage.setItem("tasks", JSON.stringify(startingArray));
-        localStorage.setItem("completed", JSON.stringify(endingArray));
+        localStorage.setItem(startingArrayStorage, JSON.stringify(startingArray));
+        localStorage.setItem(endingArrayStorage, JSON.stringify(endingArray));
 
         wrapper.remove(); // remove from UI
       } else {
@@ -70,4 +85,3 @@ const completedButton = (dropdown, wrapper, startingArray, endingArray) => {
 };
 
 export { strikeThroughButton, deleteButton, completedButton };
-
