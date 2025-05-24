@@ -6,7 +6,7 @@ let subTask = document.getElementById("subTask");
 let displaySubTasks = document.getElementById("displaySubTasks");
 let addSubTaskBtn = document.getElementById("addSubTask");
 import { runescapeSkills } from "../CONSTS.js";
-import { strikeThroughButton, deleteButton, completedButton } from "./createTasks.js";
+import { strikeThroughButton, deleteButton, completedButton, editButton } from "./createTasks.js";
 
 let storedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
@@ -42,9 +42,8 @@ window.addEventListener("load", () => {
 // };
 
 
-const createTaskButtons = (taskObject, listType) => {
+const createTaskButtons = (taskObject) => {
 
-  let divSection;
   const wrapper = document.createElement("div");
   wrapper.classList.add("task_wrapper");
   wrapper.id = taskObject.id
@@ -82,9 +81,11 @@ const createTaskButtons = (taskObject, listType) => {
   // COMPELTED BUTTON
   completedButton(dropdown, wrapper, storedTasks, completedTasks)
 
+  // EDIT BUTTON 
+  editButton(dropdown, wrapper, storedTasks)
+
   btn.addEventListener("click", () => {
     dropdown.style.display =
-
     dropdown.style.display === "none" ? "block" : "none";
   });
 };

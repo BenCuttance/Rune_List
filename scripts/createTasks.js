@@ -41,7 +41,7 @@ const completedButton = (
   listType = "completed"
 ) => {
   const completedBtn = dropdown.querySelector(".completed_btn");
-  console.log("BEFORE:", startingArray);
+
   if (completedBtn) {
     completedBtn.addEventListener("click", () => {
       let startingArrayStorage;
@@ -73,7 +73,10 @@ const completedButton = (
         }
 
         // Save updates
-        localStorage.setItem(startingArrayStorage, JSON.stringify(startingArray));
+        localStorage.setItem(
+          startingArrayStorage,
+          JSON.stringify(startingArray)
+        );
         localStorage.setItem(endingArrayStorage, JSON.stringify(endingArray));
 
         wrapper.remove(); // remove from UI
@@ -84,4 +87,25 @@ const completedButton = (
   }
 };
 
-export { strikeThroughButton, deleteButton, completedButton };
+const editButton = (dropdown, wrapper, array) => {
+  const editBtn = dropdown.querySelector("#edit_btn");
+
+  const taskId = Number(wrapper.id);
+
+  const task = array.find((task) => task.id === taskId);
+  if (editBtn && task) {
+    editBtn.addEventListener("click", () => {
+        const newTitle = prompt("Edit task value", task.title)
+
+        if (newTitle !== null && newTitle.trim() !== ""){
+            task.title = newTitle.trim()
+            localStorage.setItem("tasks", JSON.stringify(array))
+        }
+
+        const btn = wrapper.querySelector(".task_options");
+        if (btn) btn.textContent = "•  " + task.title;
+    });
+  }
+};
+
+export { strikeThroughButton, deleteButton, completedButton, editButton };
