@@ -108,4 +108,17 @@ const editButton = (dropdown, wrapper, array) => {
   }
 };
 
-export { strikeThroughButton, deleteButton, completedButton, editButton };
+const displaySubTasks = (wrapper, taskObject) => {
+taskObject.subTasks.forEach((element) => {
+  const btn = document.createElement("btn")
+  console.log(element)
+  btn.textContent = "•  " + element.subTask
+  btn.classList.add("sub_task_li")
+
+  wrapper.appendChild(btn)
+
+});
+
+}
+
+export { strikeThroughButton, deleteButton, completedButton, editButton, displaySubTasks };

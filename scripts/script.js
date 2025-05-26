@@ -3,20 +3,24 @@ let tasks = document.getElementById("taskList");
 let completedList = document.getElementById("completedList");
 let subTask = document.getElementById("subTask");
 
-let displaySubTasks = document.getElementById("displaySubTasks");
+let subTaskDiv = document.getElementById("displaySubTasks");
 let addSubTaskBtn = document.getElementById("addSubTask");
 import { runescapeSkills } from "../CONSTS.js";
-import { strikeThroughButton, deleteButton, completedButton, editButton } from "./createTasks.js";
+import {
+  strikeThroughButton,
+  deleteButton,
+  completedButton,
+  editButton,
+  displaySubTasks,
+} from "./createTasks.js";
 
 let storedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
 
 //TODO: Back to local storage
-let completedTasks =
-  JSON.parse(localStorage.getItem("completed")) || [];
-  
+let completedTasks = JSON.parse(localStorage.getItem("completed")) || [];
+
 console.log(completedTasks);
 let currentSubTasks = [];
-
 
 window.addEventListener("load", () => {
   if ("serviceWorker" in navigator) {
@@ -31,7 +35,6 @@ window.addEventListener("load", () => {
   }
 });
 
-
 // const appendTaskToList = (newTaskObject) => {
 //   createTaskButtons(newTaskObject, "task");
 // };
@@ -41,13 +44,10 @@ window.addEventListener("load", () => {
 //   createTaskButtons(string, "completed");
 // };
 
-
 const createTaskButtons = (taskObject) => {
-
   const wrapper = document.createElement("div");
   wrapper.classList.add("task_wrapper");
-  wrapper.id = taskObject.id
-
+  wrapper.id = taskObject.id;
 
   // Create the task button
   const btn = document.createElement("button");
@@ -55,11 +55,10 @@ const createTaskButtons = (taskObject) => {
 
   btn.textContent = "•  " + taskObject.title;
 
-
   // Create the dropdown menu
   const dropdown = document.createElement("div");
   dropdown.classList.add("task_dropdown");
-      dropdown.innerHTML = `
+  dropdown.innerHTML = `
         <button class="dropdown_action" id="edit_btn">Edit</button>
         <button class="dropdown_action" id="strike_btn">Strike through</button>
         <button class="dropdown_action completed_btn" id="completed_btn">Completed</button>
@@ -70,28 +69,44 @@ const createTaskButtons = (taskObject) => {
 
   wrapper.appendChild(btn);
   wrapper.appendChild(dropdown);
+
+  // ADD SUBTASKS
+  displaySubTasks(wrapper, taskObject);
+
   tasks.appendChild(wrapper);
 
   // STRIKETHROUGH BUTTON
-  strikeThroughButton(dropdown, btn)
+  strikeThroughButton(dropdown, btn);
 
   // DELETE BUTTON
-  deleteButton(dropdown, wrapper, "tasks", storedTasks)
+  deleteButton(dropdown, wrapper, "tasks", storedTasks);
 
   // COMPELTED BUTTON
-  completedButton(dropdown, wrapper, storedTasks, completedTasks)
+  completedButton(dropdown, wrapper, storedTasks, completedTasks);
 
-  // EDIT BUTTON 
-  editButton(dropdown, wrapper, storedTasks)
+  // EDIT BUTTON
+  editButton(dropdown, wrapper, storedTasks);
 
   btn.addEventListener("click", () => {
     dropdown.style.display =
-    dropdown.style.display === "none" ? "block" : "none";
+      dropdown.style.display === "none" ? "block" : "none";
   });
 };
 
-const addTaskToCompleted = (input) => {
+// TODO: ADDS SUBTASK TO DIV AND CONSOLE LOGS FOR NOW WILL NEED TO FIX
+const addSubTask = () => {
+  const li = document.createElement("li");
 
+  if (subTask.value !== "") {
+    currentSubTasks.push({ subTask: subTask.value, striked: false });
+    li.textContent = subTask.value;
+    subTaskDiv.appendChild(li);
+    subTask.value = "";
+  }
+  console.log(currentSubTasks);
+};
+
+const addTaskToCompleted = (input) => {
   const divSection = document.getElementById("completed_section");
 
   // Normalize to array if it's a single object
@@ -100,7 +115,7 @@ const addTaskToCompleted = (input) => {
   tasks.forEach((task) => {
     const wrapper = document.createElement("div");
     wrapper.classList.add("task_wrapper");
-    wrapper.id = task.id
+    wrapper.id = task.id;
 
     // Create the task button
     const btn = document.createElement("button");
@@ -121,23 +136,28 @@ const addTaskToCompleted = (input) => {
     wrapper.appendChild(btn);
 
     btn.addEventListener("click", () => {
-      dropdown.style.display = dropdown.style.display === "none" ? "block" : "none";
+      dropdown.style.display =
+        dropdown.style.display === "none" ? "block" : "none";
     });
 
     wrapper.appendChild(dropdown);
     divSection.appendChild(wrapper);
 
     strikeThroughButton(dropdown, btn);
-    deleteButton(dropdown, wrapper, "completed", completedTasks)
-    completedButton(dropdown, wrapper, completedTasks, storedTasks, "Move completed to tasks")
-
+    deleteButton(dropdown, wrapper, "completed", completedTasks);
+    completedButton(
+      dropdown,
+      wrapper,
+      completedTasks,
+      storedTasks,
+      "Move completed to tasks"
+    );
   });
 };
 
 const renderStoredTasks = () => {
   storedTasks.forEach((task) => {
-    createTaskButtons(task)
-
+    createTaskButtons(task);
   });
 };
 
@@ -167,13 +187,12 @@ const submitTask = (e) => {
     subTasks: [...currentSubTasks],
     taskType: taskType,
     id: Date.now(),
-  }
+  };
   storedTasks.push(newTaskObject);
   currentSubTasks = [];
   console.log("AFTER: ", currentSubTasks);
   // appendTaskToList(newTaskObject);
-  createTaskButtons(newTaskObject)
-
+  createTaskButtons(newTaskObject);
 
   console.log(storedTasks);
 
@@ -268,18 +287,6 @@ document
     hideSection("completed_hidden", "completed_section");
   });
 
-
-// TODO: ADDS SUBTASK TO DIV AND CONSOLE LOGS FOR NOW WILL NEED TO FIX
-// const addSubTask = () => {
-//   if (subTask.value !== "") {
-//     createTaskButtons(subTask.value, "subTask");
-//     currentSubTasks.push(subTask.value);
-//     subTask.value = "";
-//   }
-//   console.log(currentSubTasks);
-// };
-
-
 document.getElementById("submit_button").addEventListener("click", submitTask);
 
 document.getElementById("input_form").addEventListener("submit", (e) => {
@@ -291,8 +298,7 @@ document.getElementById("addSubTask").addEventListener("click", (e) => {
   addSubTask();
 });
 
-
 renderStoredTasks();
 renderCompletedTasks();
 
-export { addTaskToCompleted, createTaskButtons }
+export { addTaskToCompleted, createTaskButtons };
