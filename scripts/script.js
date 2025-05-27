@@ -12,11 +12,13 @@ import {
   completedButton,
   editButton,
   displaySubTasks,
+
   checkIsStriked,
 } from "./createTasks.js";
 
 let storedTasks = JSON.parse(localStorage.getItem("tasks") ?? "[]");
 let completedTasks = JSON.parse(localStorage.getItem("completed") ?? "[]");
+
 
 console.log(completedTasks);
 let currentSubTasks = [];
@@ -69,6 +71,7 @@ const createTaskButtons = (taskObject) => {
   wrapper.appendChild(btn);
   wrapper.appendChild(dropdown);
 
+
   // CHECK IS TASK HAS BEEN STRIKED
   checkIsStriked(btn, taskObject);
 
@@ -78,7 +81,9 @@ const createTaskButtons = (taskObject) => {
   tasks.appendChild(wrapper);
 
   // STRIKETHROUGH BUTTON
+
   strikeThroughButton(dropdown, btn, taskObject, storedTasks, "tasks");
+
 
   // DELETE BUTTON
   deleteButton(dropdown, wrapper, "tasks", storedTasks);
@@ -94,6 +99,7 @@ const createTaskButtons = (taskObject) => {
       dropdown.style.display === "none" ? "block" : "none";
   });
 };
+
 
 const addSubTask = () => {
   const li = document.createElement("li");
@@ -144,6 +150,7 @@ const addTaskToCompleted = (input) => {
     wrapper.appendChild(dropdown);
     divSection.appendChild(wrapper);
 
+
     // CHECK IS TASK HAS BEEN STRIKED
     checkIsStriked(btn, task);
 
@@ -151,6 +158,7 @@ const addTaskToCompleted = (input) => {
     displaySubTasks(wrapper, task);
 
     strikeThroughButton(dropdown, btn, task, completedTasks, "completed");
+
     deleteButton(dropdown, wrapper, "completed", completedTasks);
     completedButton(
       dropdown,
@@ -196,7 +204,9 @@ const submitTask = (e) => {
     striked: false,
     id: Date.now(),
   };
+
   console.log(newTaskObject);
+
   storedTasks.push(newTaskObject);
   currentSubTasks = [];
   console.log("AFTER: ", currentSubTasks);
