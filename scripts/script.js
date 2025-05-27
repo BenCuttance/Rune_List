@@ -12,12 +12,13 @@ import {
   completedButton,
   editButton,
   displaySubTasks,
+
+  checkIsStriked,
 } from "./createTasks.js";
 
-let storedTasks = JSON.parse(localStorage.getItem("tasks")) || [];
+let storedTasks = JSON.parse(localStorage.getItem("tasks") ?? "[]");
+let completedTasks = JSON.parse(localStorage.getItem("completed") ?? "[]");
 
-//TODO: Back to local storage
-let completedTasks = JSON.parse(localStorage.getItem("completed")) || [];
 
 console.log(completedTasks);
 let currentSubTasks = [];
@@ -70,13 +71,19 @@ const createTaskButtons = (taskObject) => {
   wrapper.appendChild(btn);
   wrapper.appendChild(dropdown);
 
+
+  // CHECK IS TASK HAS BEEN STRIKED
+  checkIsStriked(btn, taskObject);
+
   // ADD SUBTASKS
   displaySubTasks(wrapper, taskObject);
 
   tasks.appendChild(wrapper);
 
   // STRIKETHROUGH BUTTON
-  strikeThroughButton(dropdown, btn);
+
+  strikeThroughButton(dropdown, btn, taskObject, storedTasks, "tasks");
+
 
   // DELETE BUTTON
   deleteButton(dropdown, wrapper, "tasks", storedTasks);
@@ -93,7 +100,7 @@ const createTaskButtons = (taskObject) => {
   });
 };
 
-// TODO: ADDS SUBTASK TO DIV AND CONSOLE LOGS FOR NOW WILL NEED TO FIX
+
 const addSubTask = () => {
   const li = document.createElement("li");
 
@@ -143,7 +150,15 @@ const addTaskToCompleted = (input) => {
     wrapper.appendChild(dropdown);
     divSection.appendChild(wrapper);
 
-    strikeThroughButton(dropdown, btn);
+
+    // CHECK IS TASK HAS BEEN STRIKED
+    checkIsStriked(btn, task);
+
+    // ADD SUBTASKS
+    displaySubTasks(wrapper, task);
+
+    strikeThroughButton(dropdown, btn, task, completedTasks, "completed");
+
     deleteButton(dropdown, wrapper, "completed", completedTasks);
     completedButton(
       dropdown,
@@ -186,8 +201,12 @@ const submitTask = (e) => {
     title: newString,
     subTasks: [...currentSubTasks],
     taskType: taskType,
+    striked: false,
     id: Date.now(),
   };
+
+  console.log(newTaskObject);
+
   storedTasks.push(newTaskObject);
   currentSubTasks = [];
   console.log("AFTER: ", currentSubTasks);
