@@ -1,14 +1,22 @@
 import { addTaskToCompleted, createTaskButtons } from "./script.js";
 
 // STRIKETHROUGH BUTTON
-const strikeThroughButton = (dropdown, btn) => {
+const strikeThroughButton = (dropdown, btn, object, list, listType) => {
   const strikeBtn = dropdown.querySelector("#strike_btn");
   if (strikeBtn) {
     strikeBtn.addEventListener("click", () => {
-      btn.style.textDecoration =
-        btn.style.textDecoration === "line-through" ? "none" : "line-through";
+      object.striked = !object.striked;
+      btn.style.textDecoration = object.striked ? "line-through" : "none";
+      const storageKey = listType === "completed" ? "completed" : "tasks";
+      localStorage.setItem(storageKey, JSON.stringify(list));
     });
   }
+};
+
+const checkIsStriked = (btn, taskObject) => {
+  console.log("IS IS STRIKED THO??", taskObject.striked);
+
+  btn.style.textDecoration = taskObject.striked ? "line-through" : "none";
 };
 
 // DELETE BUTTON
@@ -95,30 +103,34 @@ const editButton = (dropdown, wrapper, array) => {
   const task = array.find((task) => task.id === taskId);
   if (editBtn && task) {
     editBtn.addEventListener("click", () => {
-        const newTitle = prompt("Edit task value", task.title)
+      const newTitle = prompt("Edit task value", task.title);
 
-        if (newTitle !== null && newTitle.trim() !== ""){
-            task.title = newTitle.trim()
-            localStorage.setItem("tasks", JSON.stringify(array))
-        }
+      if (newTitle !== null && newTitle.trim() !== "") {
+        task.title = newTitle.trim();
+        localStorage.setItem("tasks", JSON.stringify(array));
+      }
 
-        const btn = wrapper.querySelector(".task_options");
-        if (btn) btn.textContent = "•  " + task.title;
+      const btn = wrapper.querySelector(".task_options");
+      if (btn) btn.textContent = "•  " + task.title;
     });
   }
 };
 
 const displaySubTasks = (wrapper, taskObject) => {
-taskObject.subTasks.forEach((element) => {
-  const btn = document.createElement("btn")
-  console.log(element)
-  btn.textContent = "•  " + element.subTask
-  btn.classList.add("sub_task_li")
+  taskObject.subTasks.forEach((element) => {
+    const btn = document.createElement("btn");
+    btn.textContent = "•  " + element.subTask;
+    btn.classList.add("sub_task_li");
 
-  wrapper.appendChild(btn)
+    wrapper.appendChild(btn);
+  });
+};
 
-});
-
-}
-
-export { strikeThroughButton, deleteButton, completedButton, editButton, displaySubTasks };
+export {
+  strikeThroughButton,
+  deleteButton,
+  completedButton,
+  editButton,
+  displaySubTasks,
+  checkIsStriked,
+};
