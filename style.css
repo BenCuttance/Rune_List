@@ -180,6 +180,10 @@ input[type="radio"] {
   padding-left: 5%;
 }
 
+.sub_task_li:hover {
+  color: red;
+}
+
 input[type="radio"]:checked::before {
   content: "";
   position: absolute;
