@@ -1,4 +1,9 @@
-import { addTaskToCompleted, createTaskButtons } from "./script.js";
+import {
+  addTaskToCompleted,
+  createTaskButtons,
+  storedTasks,
+  completedTasks,
+} from "./script.js";
 
 // STRIKETHROUGH BUTTON
 const strikeThroughButton = (dropdown, btn, object, list, listType) => {
@@ -19,6 +24,42 @@ const checkIsStriked = (btn, taskObject) => {
   btn.style.textDecoration = taskObject.striked ? "line-through" : "none";
 };
 
+// SUB TASK STRIKE THROUGH
+const strikeThroughSubTasksButton = (dropdown, wrapper, listType, list) => {
+  const strikeBtn = dropdown.querySelector("#strike_btn");
+
+  if (strikeBtn) {
+    strikeBtn.addEventListener("click", () => {
+      const subTaskId = wrapper.id;
+
+      const storageKey = listType === "completed" ? "completed" : "tasks";
+
+      list.forEach((task) => {
+        if (Array.isArray(task.subTasks)) {
+          task.subTasks.forEach((subTask) => {
+            if (subTask.subTaskID === subTaskId) {
+              subTask.striked = !subTask.striked;
+
+              // Update the DOM
+              const btn = wrapper.querySelector(".sub_task_btn");
+              if (btn) {
+                btn.style.textDecoration = subTask.striked
+                  ? "line-through"
+                  : "none";
+              }
+            }
+          });
+        }
+      });
+
+      // Save updated task list
+      localStorage.setItem(storageKey, JSON.stringify(list));
+
+      console.log(`Toggled strike for subtask ${subTaskId} in ${storageKey}`);
+    });
+  }
+};
+
 // DELETE BUTTON
 const deleteButton = (dropdown, wrapper, listType, list) => {
   const deleteBtn = dropdown.querySelector(".delete_btn");
@@ -36,6 +77,33 @@ const deleteButton = (dropdown, wrapper, listType, list) => {
       localStorage.setItem(storageKey, JSON.stringify(updatedList));
       wrapper.remove();
       console.log(`Deleted task ${taskId} from ${storageKey}`);
+    });
+  }
+};
+
+// SUB TASK DELETE BUTTON
+const deleteSubTasksButton = (dropdown, wrapper, listType, list) => {
+  const deleteBtn = dropdown.querySelector(".delete_btn");
+
+  if (deleteBtn) {
+    deleteBtn.addEventListener("click", () => {
+      const subTaskId = wrapper.id;
+
+      const storageKey = listType === "completed" ? "completed" : "tasks";
+
+      list.forEach((task) => {
+        if (Array.isArray(task.subTasks)) {
+          task.subTasks = task.subTasks.filter(
+            (subTask) => subTask.subTaskID !== subTaskId
+          );
+        }
+      });
+
+      localStorage.setItem(storageKey, JSON.stringify(list));
+
+      wrapper.remove();
+
+      console.log(`Deleted subtask ${subTaskId} from ${storageKey}`);
     });
   }
 };
@@ -118,11 +186,53 @@ const editButton = (dropdown, wrapper, array) => {
 
 const displaySubTasks = (wrapper, taskObject) => {
   taskObject.subTasks.forEach((element) => {
-    const btn = document.createElement("btn");
-    btn.textContent = "•  " + element.subTask;
-    btn.classList.add("sub_task_li");
+    const subWrapper = document.createElement("div");
+    subWrapper.classList.add("task_wrapper");
+    subWrapper.id = element.subTaskID;
 
-    wrapper.appendChild(btn);
+    console.log(subWrapper.id);
+
+    const dropdown = document.createElement("div");
+    dropdown.classList.add("task_dropdown");
+
+    const btn = document.createElement("button");
+    btn.textContent = "• " + element.subTask;
+    btn.classList.add("sub_task_btn");
+
+    dropdown.innerHTML = `
+      <button class="dropdown_action" id="strike_btn">Strike through</button>
+      <button class="dropdown_action delete_btn">Delete</button>
+    `;
+
+    dropdown.style.display = "none";
+
+    subWrapper.appendChild(btn);
+
+    btn.addEventListener("click", (event) => {
+      event.stopPropagation();
+
+      dropdown.style.display =
+        dropdown.style.display === "block" ? "none" : "block";
+
+      if (dropdown.style.display === "block") {
+        const handleClickOutside = (e) => {
+          if (!dropdown.contains(e.target) && e.target !== btn) {
+            dropdown.style.display = "none";
+            document.removeEventListener("click", handleClickOutside);
+          }
+        };
+
+        document.addEventListener("click", handleClickOutside);
+      }
+    });
+
+    subWrapper.appendChild(dropdown);
+    wrapper.appendChild(subWrapper);
+
+    deleteSubTasksButton(dropdown, subWrapper, "tasks", storedTasks);
+    strikeThroughSubTasksButton(dropdown, subWrapper, "tasks", storedTasks);
+
+    checkIsStriked(btn, element);
   });
 };
 
@@ -134,4 +244,3 @@ export {
   displaySubTasks,
   checkIsStriked,
 };
-

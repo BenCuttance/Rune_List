@@ -61,8 +61,8 @@ body {
   background-repeat: no-repeat;
   background-color: rgba(0, 0, 0, 0.4);
   background-blend-mode: overlay;
-  min-height: 100vh;          /* 👈 allows scroll to expand background */
-  background-attachment: fixed; 
+  min-height: 100vh; /* 👈 allows scroll to expand background */
+  background-attachment: fixed;
 }
 
 #full_section {
@@ -108,7 +108,7 @@ body {
 }
 
 .task_dropdown {
-  align-self: normal;
+    text-wrap: nowrap;
 }
 
 #completed_section {
@@ -175,15 +175,6 @@ input[type="radio"] {
   margin-right: 8px;
 }
 
-.sub_task_li {
-  padding: 2%;
-  padding-left: 5%;
-}
-
-.sub_task_li:hover {
-  color: red;
-}
-
 input[type="radio"]:checked::before {
   content: "";
   position: absolute;
@@ -248,7 +239,7 @@ input[type="radio"]:checked::before {
   margin-top: 1%;
   padding-top: 2.5%;
   padding-bottom: 2.5%;
-  font-size: 18px;
+  font-size: 19px;
 }
 
 .task_options:hover {
@@ -257,6 +248,20 @@ input[type="radio"]:checked::before {
 
 .task_options > li {
   margin-top: 5%;
+}
+
+.sub_task_btn:hover {
+  color: red;
+  cursor: pointer;
+  background-color: none;
+}
+
+.sub_task_btn {
+  font: var(--font-runescape);
+  border: none;
+  background-color: transparent;
+  color: var(--text-orange);
+  text-wrap: nowrap
 }
 
 .task_wrapper {
@@ -303,9 +308,6 @@ input[type="radio"]:checked::before {
 .div_dropdown {
   display: flex;
   justify-content: space-between;
-  padding: 1%;
-  padding-left: 2%;
-  padding-right: 2%;
 }
 
 .div_dropdown_hidden {
