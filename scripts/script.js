@@ -1,10 +1,9 @@
 let taskTitle = document.getElementById("taskTitle_input");
 let tasks = document.getElementById("taskList");
-let completedList = document.getElementById("completedList");
+let completedTasksList = document.getElementById("completedList")
 let subTask = document.getElementById("subTask");
-
 let subTaskDiv = document.getElementById("displaySubTasks");
-let addSubTaskBtn = document.getElementById("addSubTask");
+
 import { runescapeSkills } from "../CONSTS.js";
 import {
   strikeThroughButton,
@@ -12,15 +11,13 @@ import {
   completedButton,
   editButton,
   displaySubTasks,
-
   checkIsStriked,
 } from "./createTasks.js";
 
 let storedTasks = JSON.parse(localStorage.getItem("tasks") ?? "[]");
 let completedTasks = JSON.parse(localStorage.getItem("completed") ?? "[]");
 
-
-console.log(completedTasks);
+console.log(storedTasks);
 let currentSubTasks = [];
 
 window.addEventListener("load", () => {
@@ -71,7 +68,6 @@ const createTaskButtons = (taskObject) => {
   wrapper.appendChild(btn);
   wrapper.appendChild(dropdown);
 
-
   // CHECK IS TASK HAS BEEN STRIKED
   checkIsStriked(btn, taskObject);
 
@@ -84,7 +80,6 @@ const createTaskButtons = (taskObject) => {
 
   strikeThroughButton(dropdown, btn, taskObject, storedTasks, "tasks");
 
-
   // DELETE BUTTON
   deleteButton(dropdown, wrapper, "tasks", storedTasks);
 
@@ -94,18 +89,37 @@ const createTaskButtons = (taskObject) => {
   // EDIT BUTTON
   editButton(dropdown, wrapper, storedTasks);
 
-  btn.addEventListener("click", () => {
+  btn.addEventListener("click", (event) => {
+    event.stopPropagation(); // Prevent it from triggering the document listener below
+
+    // Toggle visibility
     dropdown.style.display =
-      dropdown.style.display === "none" ? "block" : "none";
+      dropdown.style.display === "block" ? "none" : "block";
+
+    // Only add the outside-click handler if we're showing the dropdown
+    if (dropdown.style.display === "block") {
+      const handleClickOutside = (e) => {
+        // Check if the click was outside the dropdown and the button
+        if (!dropdown.contains(e.target) && e.target !== btn) {
+          dropdown.style.display = "none";
+          document.removeEventListener("click", handleClickOutside);
+        }
+      };
+
+      document.addEventListener("click", handleClickOutside);
+    }
   });
 };
-
 
 const addSubTask = () => {
   const li = document.createElement("li");
 
   if (subTask.value !== "") {
-    currentSubTasks.push({ subTask: subTask.value, striked: false });
+    currentSubTasks.push({
+      subTask: subTask.value,
+      striked: false,
+      subTaskID: `${Date.now()}` + `${currentSubTasks.length}`,
+    });
     li.textContent = subTask.value;
     subTaskDiv.appendChild(li);
     subTask.value = "";
@@ -114,7 +128,6 @@ const addSubTask = () => {
 };
 
 const addTaskToCompleted = (input) => {
-  const divSection = document.getElementById("completed_section");
 
   // Normalize to array if it's a single object
   const tasks = Array.isArray(input) ? input : [input];
@@ -148,8 +161,7 @@ const addTaskToCompleted = (input) => {
     });
 
     wrapper.appendChild(dropdown);
-    divSection.appendChild(wrapper);
-
+    completedTasksList.appendChild(wrapper);
 
     // CHECK IS TASK HAS BEEN STRIKED
     checkIsStriked(btn, task);
@@ -320,4 +332,4 @@ document.getElementById("addSubTask").addEventListener("click", (e) => {
 renderStoredTasks();
 renderCompletedTasks();
 
-export { addTaskToCompleted, createTaskButtons };
+export { addTaskToCompleted, createTaskButtons, storedTasks, completedTasks };
