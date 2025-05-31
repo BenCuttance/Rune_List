@@ -25,22 +25,38 @@ const checkIsStriked = (btn, taskObject) => {
 };
 
 // SUB TASK STRIKE THROUGH
-const strikeThroughSubTasksButton = (dropdown, wrapper, listType, list) => {
+const strikeThroughSubTasksButton = (dropdown, wrapper) => {
   const strikeBtn = dropdown.querySelector("#strike_btn");
 
   if (strikeBtn) {
     strikeBtn.addEventListener("click", () => {
       const subTaskId = wrapper.id;
+      const parentList = wrapper.closest("[data-list-type]");
 
-      const storageKey = listType === "completed" ? "completed" : "tasks";
+      if (!parentList) {
+        console.warn("Could not find parent with data-list-type");
+        return;
+      }
 
-      list.forEach((task) => {
+      const listType = parentList.dataset.listType;
+      const storageKey = listType;
+      let storageList;
+
+      if (listType === "tasks") {
+        storageList = storedTasks;
+      } else if (listType === "completed") {
+        storageList = completedTasks;
+      } else {
+        console.warn(`Unrecognized list type: ${listType}`);
+        return;
+      }
+
+      storageList.forEach((task) => {
         if (Array.isArray(task.subTasks)) {
           task.subTasks.forEach((subTask) => {
             if (subTask.subTaskID === subTaskId) {
               subTask.striked = !subTask.striked;
 
-              // Update the DOM
               const btn = wrapper.querySelector(".sub_task_btn");
               if (btn) {
                 btn.style.textDecoration = subTask.striked
@@ -52,9 +68,7 @@ const strikeThroughSubTasksButton = (dropdown, wrapper, listType, list) => {
         }
       });
 
-      // Save updated task list
-      localStorage.setItem(storageKey, JSON.stringify(list));
-
+      localStorage.setItem(storageKey, JSON.stringify(storageList));
       console.log(`Toggled strike for subtask ${subTaskId} in ${storageKey}`);
     });
   }

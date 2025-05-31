@@ -1,8 +1,9 @@
 let taskTitle = document.getElementById("taskTitle_input");
 let tasks = document.getElementById("taskList");
+let completedTasksList = document.getElementById("completedList")
 let subTask = document.getElementById("subTask");
-
 let subTaskDiv = document.getElementById("displaySubTasks");
+
 import { runescapeSkills } from "../CONSTS.js";
 import {
   strikeThroughButton,
@@ -127,7 +128,6 @@ const addSubTask = () => {
 };
 
 const addTaskToCompleted = (input) => {
-  const divSection = document.getElementById("completed_section");
 
   // Normalize to array if it's a single object
   const tasks = Array.isArray(input) ? input : [input];
@@ -161,7 +161,7 @@ const addTaskToCompleted = (input) => {
     });
 
     wrapper.appendChild(dropdown);
-    divSection.appendChild(wrapper);
+    completedTasksList.appendChild(wrapper);
 
     // CHECK IS TASK HAS BEEN STRIKED
     checkIsStriked(btn, task);
