@@ -5,7 +5,6 @@ import {
   completedTasks,
 } from "./script.js";
 
-// STRIKETHROUGH BUTTON
 const strikeThroughButton = (dropdown, btn, object, list, listType) => {
   const strikeBtn = dropdown.querySelector("#strike_btn");
   if (strikeBtn) {
@@ -19,12 +18,9 @@ const strikeThroughButton = (dropdown, btn, object, list, listType) => {
 };
 
 const checkIsStriked = (btn, taskObject) => {
-  console.log("IS IS STRIKED THO??", taskObject.striked);
-
   btn.style.textDecoration = taskObject.striked ? "line-through" : "none";
 };
 
-// SUB TASK STRIKE THROUGH
 const strikeThroughSubTasksButton = (dropdown, wrapper) => {
   const strikeBtn = dropdown.querySelector("#strike_btn");
 
@@ -74,7 +70,6 @@ const strikeThroughSubTasksButton = (dropdown, wrapper) => {
   }
 };
 
-// DELETE BUTTON
 const deleteButton = (dropdown, wrapper, listType, list) => {
   const deleteBtn = dropdown.querySelector(".delete_btn");
 
@@ -95,7 +90,6 @@ const deleteButton = (dropdown, wrapper, listType, list) => {
   }
 };
 
-// SUB TASK DELETE BUTTON
 const deleteSubTasksButton = (dropdown, wrapper, listType, list) => {
   const deleteBtn = dropdown.querySelector(".delete_btn");
 
@@ -122,7 +116,6 @@ const deleteSubTasksButton = (dropdown, wrapper, listType, list) => {
   }
 };
 
-// COMPLETED BUTTON
 const completedButton = (
   dropdown,
   wrapper,
@@ -142,14 +135,10 @@ const completedButton = (
       const task = startingArray.find((task) => task.id === taskId);
 
       if (task) {
-        // Remove from starting array
         const updatedStart = startingArray.filter((t) => t.id !== taskId);
         startingArray.length = 0;
         startingArray.push(...updatedStart);
 
-        console.log("AFTER:", startingArray);
-
-        // Add to ending array
         endingArray.push(task);
 
         if (listType === "completed") {
@@ -162,14 +151,13 @@ const completedButton = (
           endingArrayStorage = "tasks";
         }
 
-        // Save updates
         localStorage.setItem(
           startingArrayStorage,
           JSON.stringify(startingArray)
         );
         localStorage.setItem(endingArrayStorage, JSON.stringify(endingArray));
 
-        wrapper.remove(); // remove from UI
+        wrapper.remove(); 
       } else {
         console.log("NOT FOUND");
       }
@@ -203,8 +191,6 @@ const displaySubTasks = (wrapper, taskObject) => {
     const subWrapper = document.createElement("div");
     subWrapper.classList.add("task_wrapper");
     subWrapper.id = element.subTaskID;
-
-    console.log(subWrapper.id);
 
     const dropdown = document.createElement("div");
     dropdown.classList.add("task_dropdown");

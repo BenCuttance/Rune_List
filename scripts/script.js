@@ -33,15 +33,6 @@ window.addEventListener("load", () => {
   }
 });
 
-// const appendTaskToList = (newTaskObject) => {
-//   createTaskButtons(newTaskObject, "task");
-// };
-
-//TODO: delete?
-// const appendTaskToCompleted = (string) => {
-//   createTaskButtons(string, "completed");
-// };
-
 const createTaskButtons = (taskObject) => {
   const wrapper = document.createElement("div");
   wrapper.classList.add("task_wrapper");
@@ -68,38 +59,28 @@ const createTaskButtons = (taskObject) => {
   wrapper.appendChild(btn);
   wrapper.appendChild(dropdown);
 
-  // CHECK IS TASK HAS BEEN STRIKED
   checkIsStriked(btn, taskObject);
 
-  // ADD SUBTASKS
   displaySubTasks(wrapper, taskObject);
 
   tasks.appendChild(wrapper);
 
-  // STRIKETHROUGH BUTTON
-
   strikeThroughButton(dropdown, btn, taskObject, storedTasks, "tasks");
 
-  // DELETE BUTTON
   deleteButton(dropdown, wrapper, "tasks", storedTasks);
 
-  // COMPELTED BUTTON
   completedButton(dropdown, wrapper, storedTasks, completedTasks);
 
-  // EDIT BUTTON
   editButton(dropdown, wrapper, storedTasks);
 
   btn.addEventListener("click", (event) => {
-    event.stopPropagation(); // Prevent it from triggering the document listener below
+    event.stopPropagation();
 
-    // Toggle visibility
     dropdown.style.display =
       dropdown.style.display === "block" ? "none" : "block";
 
-    // Only add the outside-click handler if we're showing the dropdown
     if (dropdown.style.display === "block") {
       const handleClickOutside = (e) => {
-        // Check if the click was outside the dropdown and the button
         if (!dropdown.contains(e.target) && e.target !== btn) {
           dropdown.style.display = "none";
           document.removeEventListener("click", handleClickOutside);
@@ -124,7 +105,6 @@ const addSubTask = () => {
     subTaskDiv.appendChild(li);
     subTask.value = "";
   }
-  console.log(currentSubTasks);
 };
 
 const addTaskToCompleted = (input) => {
@@ -137,12 +117,10 @@ const addTaskToCompleted = (input) => {
     wrapper.classList.add("task_wrapper");
     wrapper.id = task.id;
 
-    // Create the task button
     const btn = document.createElement("button");
     btn.classList.add("task_options");
     btn.textContent = "•  " + task.title;
 
-    // Create the dropdown menu
     const dropdown = document.createElement("div");
     dropdown.classList.add("task_dropdown");
 
@@ -163,10 +141,8 @@ const addTaskToCompleted = (input) => {
     wrapper.appendChild(dropdown);
     completedTasksList.appendChild(wrapper);
 
-    // CHECK IS TASK HAS BEEN STRIKED
     checkIsStriked(btn, task);
 
-    // ADD SUBTASKS
     displaySubTasks(wrapper, task);
 
     strikeThroughButton(dropdown, btn, task, completedTasks, "completed");
@@ -205,9 +181,6 @@ const submitTask = (e) => {
 
   let matchedInput = skillSearch(userInput);
   let newString = `${matchedInput} ${taskTitle.value} (${taskType})`;
-  console.log(matchedInput);
-
-  console.log("BEFORE: ", currentSubTasks);
 
   let newTaskObject = {
     title: newString,
@@ -217,15 +190,9 @@ const submitTask = (e) => {
     id: Date.now(),
   };
 
-  console.log(newTaskObject);
-
   storedTasks.push(newTaskObject);
   currentSubTasks = [];
-  console.log("AFTER: ", currentSubTasks);
-  // appendTaskToList(newTaskObject);
   createTaskButtons(newTaskObject);
-
-  console.log(storedTasks);
 
   localStorage.setItem("tasks", JSON.stringify(storedTasks));
   clearForm();
@@ -261,7 +228,6 @@ const skillSearch = (sentence) => {
     .filter(Boolean);
   sentenceArray.push(wordsArray);
 
-  // Filter out all matching skills
   const matchedSkills = wordsArray
     .map((word) => findSkillByName(word))
     .filter((skill) => skill !== undefined);
