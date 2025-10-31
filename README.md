@@ -21,4 +21,7 @@ Create tasks, manage optional subtasks (WIP), and track completion — all with 
 - HTML
 - CSS
 - JavaScript (Vanilla)
+
 - GitHub Pages for deployment
+
+  LINK:  https://bencuttance.github.io/Rune_List/
